@@ -6,6 +6,11 @@ class ExcludesTestCase(unittest.TestCase):
 
     def test_excludes(self):
         stuff :set[str] = set()
+        # make sure "no cover" still works
+        empty :list = []
+        if empty:  # pragma: no cover
+            stuff.add('never')
+        # os.name
         if os.name == 'nt':  # cover-only-nt
             stuff.add('is-nt')
         else:  # cover-not-nt
@@ -14,7 +19,7 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('is-posix')
         else:  # cover-not-posix
             stuff.add('not-posix')
-
+        # sys.platform
         if sys.platform == 'linux':  # cover-only-linux
             stuff.add('is-linux')
         else:  # cover-not-linux
@@ -31,7 +36,7 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('is-darwin')
         else:  # cover-not-darwin
             stuff.add('not-darwin')
-
+        # sys.implementation.name
         if sys.implementation.name == 'cpython':  # cover-only-cpython
             stuff.add('is-cpython')
         else:  # cover-not-cpython
@@ -56,4 +61,5 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('lt4.0')
         else:  # cover-req-ge4.0
             stuff.add('ge4.0')
+
         self.assertTrue(stuff)

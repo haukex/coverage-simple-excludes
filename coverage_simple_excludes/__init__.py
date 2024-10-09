@@ -41,12 +41,11 @@ class MyPlugin(coverage.plugin.CoveragePlugin):
         pass
     def configure(self, config: coverage.types.TConfigurable) -> None:
         # get config option
-        excl = config.get_option('report:exclude_lines')
-        #print(f"Before: {excl!r}", file=sys.stderr)  # Debug
-        if excl is None:
-            excl = []
-        assert isinstance(excl, list)
-        exclude :set[str] = set(excl)
+        exclude = config.get_option('report:exclude_lines')
+        #print(f"Before: {exclude!r}", file=sys.stderr)  # Debug
+        if exclude is None:
+            exclude = []
+        assert isinstance(exclude, list)
         # os / platform / implementation
         assert os.name in OS_NAMES, f"{os.name=} not in {OS_NAMES=}"
         assert sys.platform in SYS_PLATFORMS, f"{sys.platform=} not in {SYS_PLATFORMS=}"
@@ -60,17 +59,18 @@ class MyPlugin(coverage.plugin.CoveragePlugin):
         nots.sort(key=len, reverse=True)
         only.sort()
         only.sort(key=len, reverse=True)
-        exclude.add('not-(?:'+'|'.join(nots)+')')
-        exclude.add('only-(?:'+'|'.join(only)+')')
-        # python version
-        exclude.add(f"req-lt(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
-                    f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])")
-        exclude.add(f"req-ge(?:{re_int_ineq('>', sys.version_info.major, anchor=False)}\\.[0-9]+"
-                    f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])")
+        exclude.extend( f"#\\s*cover-{e}" for e in (
+            'not-(?:'+'|'.join(nots)+')',
+            'only-(?:'+'|'.join(only)+')',
+            # + python version
+            f"req-lt(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
+            f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])",
+            f"req-ge(?:{re_int_ineq('>', sys.version_info.major, anchor=False)}\\.[0-9]+"
+            f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])",
+        ) )
         # write config option
-        excl = [ f"#\\s*cover-{e}" for e in sorted(exclude) ]
-        #print(f"After: {excl!r}", file=sys.stderr)  # Debug
-        config.set_option('report:exclude_lines', excl)
+        #print(f"After: {exclude!r}", file=sys.stderr)  # Debug
+        config.set_option('report:exclude_lines', exclude)
 
 def coverage_init(reg :coverage.plugin_support.Plugins, options :dict[str,str]):
     reg.add_configurer(MyPlugin(**options))
