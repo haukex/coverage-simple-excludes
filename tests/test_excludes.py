@@ -62,4 +62,4 @@ class ExcludesTestCase(unittest.TestCase):
         else:  # cover-req-ge4.0
             stuff.add('ge4.0')
 
-        self.assertTrue(stuff)
+        self.assertEqual(len(stuff), 10)
