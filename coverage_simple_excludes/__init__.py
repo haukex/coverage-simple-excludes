@@ -51,7 +51,7 @@ class MyPlugin(coverage.plugin.CoveragePlugin):
         #print(f"Before: {exclude_lines!r}", file=sys.stderr)  # Debug
         if isinstance(exclude_lines, list):
             excludes = exclude_lines
-        # I'm not sure if the following two cases will ever happen
+        # I'm not sure if the following two cases will ever happen, but code defensively
         elif isinstance(exclude_lines, str):  # pragma: no cover
             excludes = [exclude_lines]
         else:  # pragma: no cover
@@ -59,10 +59,10 @@ class MyPlugin(coverage.plugin.CoveragePlugin):
         # os / platform / implementation
         excludes.extend(_OS_PLAT_IMPL)
         # python version
-        excludes.append(f"{_PREFIX}req-lt(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
-            f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])" )
-        excludes.append(f"{_PREFIX}req-ge(?:{re_int_ineq('>',  sys.version_info.major, anchor=False)}\\.[0-9]+"
-            f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])" )
+        excludes.append(  f"{_PREFIX}req-lt(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
+                f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])" )
+        excludes.append(  f"{_PREFIX}req-ge(?:{re_int_ineq('>',  sys.version_info.major, anchor=False)}\\.[0-9]+"
+                f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])" )
         # write config option
         #print(f"After: {exclude!r}", file=sys.stderr)  # Debug
         config.set_option('report:exclude_lines', excludes)
