@@ -25,6 +25,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see https://www.gnu.org/licenses/
 """
 import os
+import re
 import sys
 from re_int_ineq import re_int_ineq
 import coverage.plugin_support
@@ -32,15 +33,20 @@ import coverage.plugin
 import coverage.types
 
 # REMEMBER to update README.md when updating the following:
-OS_NAMES :set[str] = { os.name, "posix", "nt", "java" }
-SYS_PLATFORMS :set[str] = { sys.platform, "aix", "emscripten", "linux", "wasi", "win32", "cygwin", "darwin" }
-SYS_IMPL_NAMES :set[str] = { sys.implementation.name, "cpython", "ironpython", "jython", "pypy" }
-_NOTS = { os.name, sys.platform, sys.implementation.name }
-_PREFIX = "#\\s*cover-"
-_OS_PLAT_IMPL = (
-    _PREFIX+'not-(?:'+'|'.join(sorted(sorted( _NOTS ), key=len, reverse=True))+')',
-    _PREFIX+'only-(?:'+'|'.join(sorted(sorted( (OS_NAMES|SYS_PLATFORMS|SYS_IMPL_NAMES) - _NOTS ), key=len, reverse=True))+')',
-)
+OS_NAMES       = { os.name, "posix", "nt", "java" }
+SYS_PLATFORMS  = { sys.platform, "aix", "emscripten", "linux", "wasi", "win32", "cygwin", "darwin" }
+SYS_IMPL_NAMES = { sys.implementation.name, "cpython", "ironpython", "jython", "pypy" }
+_NOTS          = { os.name, sys.platform, sys.implementation.name }
+EXCLUDES = tuple( "#\\s*cover-"+e for e in (
+    # os / platform / implementation
+    'not-(?:' +'|'.join(map(re.escape,sorted(sorted( _NOTS ), key=len, reverse=True)))+')',
+    'only-(?:'+'|'.join(map(re.escape,sorted(sorted( (OS_NAMES|SYS_PLATFORMS|SYS_IMPL_NAMES) - _NOTS ), key=len, reverse=True)))+')',
+    # python version
+    'req-lt'                 f"(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
+    f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])",
+    'req-ge'                 f"(?:{re_int_ineq('>',  sys.version_info.major, anchor=False)}\\.[0-9]+"
+    f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])",
+) )
 
 class MyPlugin(coverage.plugin.CoveragePlugin):
     def __init__(self) -> None:
@@ -56,16 +62,13 @@ class MyPlugin(coverage.plugin.CoveragePlugin):
             excludes = [exclude_lines]
         else:  # pragma: no cover
             excludes = []
-        # os / platform / implementation
-        excludes.extend(_OS_PLAT_IMPL)
-        # python version
-        excludes.append(  f"{_PREFIX}req-lt(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
-                f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])" )
-        excludes.append(  f"{_PREFIX}req-ge(?:{re_int_ineq('>',  sys.version_info.major, anchor=False)}\\.[0-9]+"
-                f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])" )
+        excludes.extend(EXCLUDES)
         # write config option
-        #print(f"After: {exclude!r}", file=sys.stderr)  # Debug
+        #print(f"After: {excludes!r}", file=sys.stderr)  # Debug
         config.set_option('report:exclude_lines', excludes)
+    def sys_info(self):  # pragma: no cover
+        # return debugging info when coverage is run with --debug=sys
+        return ( ('additional_excludes', EXCLUDES), )
 
 def coverage_init(reg :coverage.plugin_support.Plugins, options :dict[str,str]):
     reg.add_configurer(MyPlugin(**options))
