@@ -40,7 +40,7 @@ if sys.platform != 'win32':  # cover-not-win32
 else:  # cover-only-win32
     print("This code is only executed on win32 systems")
 
-if sys.hexversion < 0x03_0C:  # cover-req-lt3.12
+if sys.hexversion < 0x03_0C_00_00:  # cover-req-lt3.12
     print("This code is only executed on a version of Python before 3.12")
 else:  # cover-req-ge3.12
     print("This code is only executed on Python 3.12 or later")

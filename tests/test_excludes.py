@@ -49,7 +49,7 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('ge3.11')
         else:  # cover-req-lt3.11
             stuff.add('lt3.11')
-        if sys.hexversion < 0x03_0C:  # cover-req-lt3.12
+        if sys.hexversion < 0x03_0C_00_00:  # cover-req-lt3.12
             stuff.add('lt3.12')
         else:  # cover-req-ge3.12
             stuff.add('ge3.12')
