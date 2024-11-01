@@ -2,6 +2,9 @@ import os
 import sys
 import unittest
 
+# WARNING: Lines in this file are hardcoded in post_test_check.py !!!
+# If changing this file, make sure to update the lines there!
+
 class ExcludesTestCase(unittest.TestCase):
 
     def test_excludes(self):
@@ -15,7 +18,7 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('is-nt')
         else:  # cover-not-nt
             stuff.add('not-nt')
-        if os.name=='posix':  # cover-only-posix
+        if os.name == 'posix':  # cover-only-posix
             stuff.add('is-posix')
         else:  # cover-not-posix
             stuff.add('not-posix')
@@ -25,13 +28,13 @@ class ExcludesTestCase(unittest.TestCase):
         else:  # cover-not-linux
             stuff.add('not-linux')
         if sys.platform == 'win32':  # cover-only-win32
-            stuff.add('is-win32')
+            stuff.add('is-win32-1')
         else:  # cover-not-win32
-            stuff.add('not-win32')
+            stuff.add('not-win32-1')
         if sys.platform != 'win32':  # cover-not-win32
-            stuff.add('not-win32')
+            stuff.add('not-win32-2')
         else:  # cover-only-win32
-            stuff.add('is-win32')
+            stuff.add('is-win32-2')
         if sys.platform == 'darwin':  # cover-only-darwin
             stuff.add('is-darwin')
         else:  # cover-not-darwin
@@ -53,13 +56,13 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('lt3.12')
         else:  # cover-req-ge3.12
             stuff.add('ge3.12')
-        if sys.version_info.major>=2:  # cover-req-ge2.0
+        if sys.version_info.major >= 2:  # cover-req-ge2.0
             stuff.add('ge2.0')
         else:  # cover-req-lt2.0
             stuff.add('lt2.0')
-        if sys.version_info.major<4:  # cover-req-lt4.0
+        if sys.version_info.major < 4:  # cover-req-lt4.0
             stuff.add('lt4.0')
         else:  # cover-req-ge4.0
             stuff.add('ge4.0')
 
-        self.assertEqual(len(stuff), 10)
+        self.assertEqual(len(stuff), 11)
