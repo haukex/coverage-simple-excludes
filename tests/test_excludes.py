@@ -24,9 +24,10 @@ class ExcludesTestCase(unittest.TestCase):
             stuff.add('not-posix')
         # sys.platform
         if sys.platform == 'linux':  # cover-only-linux
-            stuff.add('is-linux')
+            # The `linuxx` in the following are to make sure regex \b is working as expected
+            stuff.add('is-linux')  # cover-not-linuxx
         else:  # cover-not-linux
-            stuff.add('not-linux')
+            stuff.add('not-linux')  # cover-only-linuxx
         if sys.platform == 'win32':  # cover-only-win32
             stuff.add('is-win32-1')
         else:  # cover-not-win32

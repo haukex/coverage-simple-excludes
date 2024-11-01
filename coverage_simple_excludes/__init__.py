@@ -39,10 +39,10 @@ SYS_IMPL_NAMES = { sys.implementation.name, "cpython", "ironpython", "jython", "
 _NOTS          = { os.name, sys.platform, sys.implementation.name }
 EXCLUDES = tuple( "#\\s*cover-"+e for e in (
     # os / platform / implementation
-    'not-(?:' +'|'.join(map(re.escape,sorted(sorted( _NOTS ), key=len, reverse=True)))+')',
-    'only-(?:'+'|'.join(map(re.escape,sorted(sorted( (OS_NAMES|SYS_PLATFORMS|SYS_IMPL_NAMES) - _NOTS ), key=len, reverse=True)))+')',
+    'not-(?:' +'|'.join(map(re.escape,sorted(sorted( _NOTS ), key=len, reverse=True)))+')\\b',
+    'only-(?:'+'|'.join(map(re.escape,sorted(sorted( (OS_NAMES|SYS_PLATFORMS|SYS_IMPL_NAMES) - _NOTS ), key=len, reverse=True)))+')\\b',
     # python version
-    'req-lt'                 f"(?:{re_int_ineq('<=', sys.version_info.major, anchor=False)}\\.[0-9]+"
+    'req-lt'                 f"(?:{re_int_ineq('<',  sys.version_info.major, anchor=False)}\\.[0-9]+"
     f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])",
     'req-ge'                 f"(?:{re_int_ineq('>',  sys.version_info.major, anchor=False)}\\.[0-9]+"
     f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])",

@@ -9,30 +9,9 @@ When you enable it, for example in `pyproject.toml`:
 plugins = ["coverage_simple_excludes"]
 ```
 
-Then, in addition to the default `# pragma: no cover`, you get several more comments in the
-format `# cover-...` that you can use to specify that lines or blocks of code should be excluded from coverage:
-
-- `# cover-req-ltX.Y` and `# cover-req-geX.Y`, where:
-  - `X` and `Y` are the major and minor Python version, respectively
-  - `lt` means "a Python version lower than `X.Y` is required for this line or block of code
-    to be executed and included in the coverage check"
-  - `ge` means "a Python version equal to or higher than `X.Y` is required"
-- `# cover-not-Z` and `# cover-only-Z`, where:
-  - `not` means "this code is not executed on this os/platform/implementation"
-  - `only` means "this code is only executed on this os/platform/implementation"
-  - `Z` may be any of the following values:
-    - [`os.name`](https://docs.python.org/3/library/os.html#os.name):
-      "posix", "nt", "java"
-    - [`sys.platform`](https://docs.python.org/3/library/sys.html#sys.platform):
-      "aix", "emscripten", "linux", "wasi", "win32", "cygwin", "darwin"
-    - [`sys.implementation.name`](https://docs.python.org/3/library/sys.html#sys.implementation):
-      "cpython", "ironpython", "jython", "pypy"
-
-Note the comments are case-sensitive. Any amount of whitespace is allowed between
-the `#` and `cover`, including no space.
-
-Examples
---------
+Then, in addition to the default `# pragma: no cover`, you get several more comments in the format
+`# cover-...` that you can use to specify that lines or blocks of code should be excluded from
+coverage, for example:
 
 ```python
 if sys.platform != 'win32':  # cover-not-win32
@@ -45,6 +24,28 @@ if sys.hexversion < 0x03_0C_00_00:  # cover-req-lt3.12
 else:  # cover-req-ge3.12
     print("This code is only executed on Python 3.12 or later")
 ```
+
+- `# cover-req-ltX.Y` and `# cover-req-geX.Y`, where:
+  - `X` and `Y` are the major and minor Python version, respectively
+  - **`lt`** means "a Python version **less than (`<`) `X.Y`** is required for this line or block
+    of code to be executed and included in the coverage check"
+  - **`ge`** means "a Python version **greater than or equal to (`>=`) `X.Y`** is required"
+- `# cover-not-Z` and `# cover-only-Z`, where:
+  - **`not`** means "this code is **not** executed on this OS / platform / implementation"
+  - **`only`** means "this code is **only** executed on this OS / platform / implementation"
+  - `Z` may be any of the following values:
+    - [`os.name`](https://docs.python.org/3/library/os.html#os.name):
+      "posix", "nt", "java"
+    - [`sys.platform`](https://docs.python.org/3/library/sys.html#sys.platform):
+      "aix", "emscripten", "linux", "wasi", "win32", "cygwin", "darwin"
+    - [`sys.implementation.name`](https://docs.python.org/3/library/sys.html#sys.implementation):
+      "cpython", "ironpython", "jython", "pypy"
+
+Note the comments are case-sensitive. Any amount of whitespace is allowed between
+the `#` and `cover`, including no space. The comments must always be followed by
+whitespace or end-of-line. If you put any other comments after these comments,
+for best forward compatibility it is strongly recommended you use another `#`,
+for example: `some_code()  # cover-req-win32  # only executed on Windows`.
 
 
 Author, Copyright, and License
