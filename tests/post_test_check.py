@@ -36,7 +36,7 @@ _CMT_RE = re.compile(r'#.*?\Z')
 
 def _get_exp():
     exp = set(EXP_ALWAYS)
-    exp.add( "stuff.add('is-nt')" if os.name == 'nt' else "stuff.add('not-nt'" )
+    exp.add( "stuff.add('is-nt')" if os.name == 'nt' else "stuff.add('not-nt')" )
     exp.add( "stuff.add('is-posix')" if os.name == 'posix' else "stuff.add('not-posix')" )
     exp.add( "stuff.add('is-linux')" if sys.platform == 'linux' else "stuff.add('not-linux')" )
     exp.add( "stuff.add('is-win32-1')" if sys.platform == 'win32' else "stuff.add('not-win32-1')" )
