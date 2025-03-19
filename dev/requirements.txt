@@ -2,7 +2,7 @@
 igbpyutils == 0.8.0
 simple-perms == 1.0.0 ; sys_platform != 'win32'
 coverage[toml] == 7.7.0
-# coverage-simple-excludes == 0.9.1
+# coverage-simple-excludes == 1.0.0
 pylint == 3.3.5
 mypy == 1.15.0
 flake8 == 7.1.2
