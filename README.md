@@ -45,7 +45,7 @@ Note the comments are case-sensitive. Any amount of whitespace is allowed betwee
 the `#` and `cover`, including no space. The comments must always be followed by
 whitespace or end-of-line. If you put any other comments after these comments,
 for best forward compatibility it is strongly recommended you use another `#`,
-for example: `some_code()  # cover-req-win32  # only executed on Windows`.
+for example: `some_code()  # cover-only-win32  # only executed on Windows`.
 
 
 Author, Copyright, and License
