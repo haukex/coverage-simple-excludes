@@ -7,7 +7,7 @@ Please see the ``README.md`` that is part of this library for how to use this.
 Author, Copyright, and License
 ------------------------------
 
-Copyright (c) 2024 Hauke Dämpfling (haukex@zero-g.net)
+Copyright (c) 2024-2025 Hauke Dämpfling (haukex@zero-g.net)
 at the Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB),
 Berlin, Germany, https://www.igb-berlin.de/
 
