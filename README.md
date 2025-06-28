@@ -37,7 +37,7 @@ else:  # cover-req-ge3.12
     - [`os.name`](https://docs.python.org/3/library/os.html#os.name):
       "posix", "nt", "java"
     - [`sys.platform`](https://docs.python.org/3/library/sys.html#sys.platform):
-      "aix", "emscripten", "linux", "wasi", "win32", "cygwin", "darwin"
+      "aix", "android", "emscripten", "freebsd", "ios", "linux", "darwin", "win32", "cygwin", "wasi"
     - [`sys.implementation.name`](https://docs.python.org/3/library/sys.html#sys.implementation):
       "cpython", "ironpython", "jython", "pypy"
 

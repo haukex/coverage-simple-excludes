@@ -34,7 +34,7 @@ import coverage.types
 
 # REMEMBER to update README.md when updating the following:
 OS_NAMES       = { os.name, "posix", "nt", "java" }
-SYS_PLATFORMS  = { sys.platform, "aix", "emscripten", "linux", "wasi", "win32", "cygwin", "darwin" }
+SYS_PLATFORMS  = { sys.platform, "aix", "android", "emscripten", "freebsd", "ios", "linux", "darwin", "win32", "cygwin", "wasi" }
 SYS_IMPL_NAMES = { sys.implementation.name, "cpython", "ironpython", "jython", "pypy" }
 _NOTS          = { os.name, sys.platform, sys.implementation.name }
 EXCLUDES = tuple( "#\\s*cover-"+e for e in (
