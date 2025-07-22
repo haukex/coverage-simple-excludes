@@ -27,10 +27,18 @@ along with this program. If not, see https://www.gnu.org/licenses/
 import os
 import re
 import sys
+from typing import Optional
 from re_int_ineq import re_int_ineq
 import coverage.plugin_support
 import coverage.plugin
 import coverage.types
+
+def _make_python_regex(py_major_version :int, py_minor_version :int) -> tuple[str, ...]:
+    return (
+        'req-lt'           f"(?:{re_int_ineq('<',  py_major_version, anchor=False)}\\.[0-9]+"
+        f"|{py_major_version}\\.{re_int_ineq('<=', py_minor_version, anchor=False)})(?![0-9])",
+        'req-ge'           f"(?:{re_int_ineq('>',  py_major_version, anchor=False)}\\.[0-9]+"
+        f"|{py_major_version}\\.{re_int_ineq('>',  py_minor_version, anchor=False)})(?![0-9])", )
 
 # REMEMBER to update README.md when updating the following:
 OS_NAMES       = { os.name, "posix", "nt", "java" }
@@ -41,12 +49,7 @@ EXCLUDES = tuple( "#\\s*cover-"+e for e in (
     # os / platform / implementation
     'not-(?:' +'|'.join(map(re.escape,sorted(sorted( _NOTS ), key=len, reverse=True)))+')\\b',
     'only-(?:'+'|'.join(map(re.escape,sorted(sorted( (OS_NAMES|SYS_PLATFORMS|SYS_IMPL_NAMES) - _NOTS ), key=len, reverse=True)))+')\\b',
-    # python version
-    'req-lt'                 f"(?:{re_int_ineq('<',  sys.version_info.major, anchor=False)}\\.[0-9]+"
-    f"|{sys.version_info.major}\\.{re_int_ineq('<=', sys.version_info.minor, anchor=False)})(?![0-9])",
-    'req-ge'                 f"(?:{re_int_ineq('>',  sys.version_info.major, anchor=False)}\\.[0-9]+"
-    f"|{sys.version_info.major}\\.{re_int_ineq('>',  sys.version_info.minor, anchor=False)})(?![0-9])",
-) )
+) + _make_python_regex(sys.version_info.major, sys.version_info.minor) )
 
 class MyPlugin(coverage.plugin.CoveragePlugin):
     def __init__(self) -> None:
@@ -70,5 +73,5 @@ class MyPlugin(coverage.plugin.CoveragePlugin):
         # return debugging info when coverage is run with --debug=sys
         return ( ('additional_excludes', EXCLUDES), )
 
-def coverage_init(reg :coverage.plugin_support.Plugins, options :dict[str,str]):
-    reg.add_configurer(MyPlugin(**options))
+def coverage_init(reg :coverage.plugin_support.Plugins, options :Optional[dict[str,str]] = None):
+    reg.add_configurer(MyPlugin(**({} if options is None else options)))
