@@ -1,6 +1,11 @@
 Changelog for ``coverage-simple-excludes``
 ==========================================
 
+1.1.1 - 2025-12-02
+------------------
+
+- Stop testing on Python 3.9 (EOL) and start testing on 3.14
+
 1.1.0 - 2025-07-22
 ------------------
 
